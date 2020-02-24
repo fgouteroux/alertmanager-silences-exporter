@@ -72,7 +72,7 @@ Example:
 ```
 # HELP alertmanager_silence Alertmanager silence extract
 # TYPE alertmanager_silence gauge
-alertmanager_silence{comment="Silence",createdBy="developer",endsAt="2020-02-29T23:11:44.603Z",foo="bar",id="abcd-1234",startsAt="2020-02-20T22:12:33.533Z",status="active"} 1
+alertmanager_silence{resource_group="my-group-01",resource_name="my-vm-01",comment="Silence",createdBy="developer",endsAt="2020-02-29T23:11:44.603Z",foo="bar",id="abcd-1234",startsAt="2020-02-20T22:12:33.533Z",status="active"} 1
 ```
 
 ## Contributing
