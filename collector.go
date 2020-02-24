@@ -39,12 +39,13 @@ func (s *Silence) Decorate() error {
 
 // AlertmanagerSilencesCollector collects Alertmanager Silence metrics
 type AlertmanagerSilencesCollector struct {
-	Config *Config
+	Config             *Config
+	AlertmanagerClient AlertmanagerAPI
 }
 
 // NewAlertmanagerSilencesCollector returns the collector
-func NewAlertmanagerSilencesCollector(conf *Config) *AlertmanagerSilencesCollector {
-	return &AlertmanagerSilencesCollector{Config: conf}
+func NewAlertmanagerSilencesCollector(conf *Config, client AlertmanagerAPI) *AlertmanagerSilencesCollector {
+	return &AlertmanagerSilencesCollector{Config: conf, AlertmanagerClient: client}
 }
 
 // Describe to satisfy the collector interface.
@@ -54,9 +55,7 @@ func (c *AlertmanagerSilencesCollector) Describe(ch chan<- *prometheus.Desc) {
 
 // Collect metrics from Alertmanager
 func (c *AlertmanagerSilencesCollector) Collect(ch chan<- prometheus.Metric) {
-	ac := NewAlertManagerClient(c.Config.AlertmanagerURL)
-
-	silences, err := ac.ListSilences()
+	silences, err := c.AlertmanagerClient.ListSilences()
 	if err != nil {
 		log.Println(err)
 		os.Exit(1)

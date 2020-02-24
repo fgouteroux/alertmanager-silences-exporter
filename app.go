@@ -26,7 +26,7 @@ type App struct {
 
 func (a *App) listMetrics(w http.ResponseWriter, r *http.Request) {
 	registry := prometheus.NewRegistry()
-	collector := NewAlertmanagerSilencesCollector(a.config)
+	collector := NewAlertmanagerSilencesCollector(a.config, a.client)
 	registry.MustRegister(collector)
 
 	h := promhttp.HandlerFor(registry, promhttp.HandlerOpts{})
