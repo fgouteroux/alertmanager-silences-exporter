@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"io"
 	"io/ioutil"
-	"log"
 	"net/http"
 	"net/url"
 	"path"
@@ -77,8 +76,6 @@ func (ac *AlertmanagerClient) ListSilences() (models.GettableSilences, error) {
 	if err != nil {
 		return silences, fmt.Errorf("unable to create HTTP request: %s", err.Error())
 	}
-
-	log.Println("BODY ", string(body))
 
 	err = json.Unmarshal(body, &silences)
 	if err != nil {
