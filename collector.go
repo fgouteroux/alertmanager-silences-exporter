@@ -21,7 +21,7 @@ type Silence struct {
 }
 
 func (s *Silence) Decorate() error {
-	s.Labels = map[string]string{"sample": "one"}
+	s.Labels = map[string]string{}
 	s.Labels["id"] = *s.Gettable.ID
 	s.Labels["comment"] = *s.Gettable.Comment
 	s.Labels["createdBy"] = *s.Gettable.CreatedBy
@@ -34,7 +34,6 @@ func (s *Silence) Decorate() error {
 	}
 
 	s.Status = *s.Gettable.Status.State
-
 	return nil
 }
 
