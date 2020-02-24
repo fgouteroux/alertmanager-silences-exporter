@@ -51,7 +51,7 @@ func TestNewAlertmanagerSilencesCollector_Env_OK(t *testing.T) {
 		t.Error(err)
 	}
 
-	asc := NewAlertmanagerSilencesCollector(conf)
+	asc := NewAlertmanagerSilencesCollector(conf, &AlertmanagerClient{})
 	got := asc.Config.AlertmanagerURL
 	want := "http://localhost:9093/api/v2"
 
