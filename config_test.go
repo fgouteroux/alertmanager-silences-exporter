@@ -2,7 +2,6 @@ package main
 
 import (
 	"io/ioutil"
-	"log"
 	"os"
 	"testing"
 )
@@ -44,7 +43,6 @@ alertmanager_url: "http://localhost:9093/api/v2"
 func TestNewAlertmanagerSilencesCollector_Env_OK(t *testing.T) {
 	err := os.Setenv("ALERTMANAGER_URL", "http://localhost:9093/api/v2")
 	if err != nil {
-		log.Println("==========\nerror: ", err)
 		t.Error(err)
 	}
 
