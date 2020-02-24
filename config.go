@@ -13,15 +13,17 @@ type Config struct {
 	AlertmanagerURL string `yaml:"alertmanager_url"`
 }
 
-func loadConfig(path string) (conf *Config, err error) {
-	f, err := ioutil.ReadFile(path)
-	if err != nil {
-		return nil, err
-	}
-
-	err = yaml.Unmarshal([]byte(f), &conf)
-	if err != nil {
-		return nil, err
+func loadConfig(path string) (*Config, error) {
+	conf := &Config{}
+	if path != "" {
+		f, err := ioutil.ReadFile(path)
+		if err != nil {
+			return nil, err
+		}
+		err = yaml.Unmarshal([]byte(f), &conf)
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	envURL := os.Getenv("ALERTMANAGER_URL")
