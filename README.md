@@ -3,12 +3,6 @@ Prometheus exporter exposing [AlertManager Silences](https://prometheus.io/docs/
 
 ## Getting Started
 
-### Azure account requirements
-
-This exporter call Azure API from an existing subscription with these requirements:
-
-* An application must be registered (e.g., Azure Active Directory -> App registrations -> New application registration)
-
 ### Prerequisites
 
 To run this project, you will need a [working Go environment](https://golang.org/doc/install).
@@ -35,11 +29,11 @@ The exporter expects a config file as one of its arguments:
 ./alertmanager-silences-exporter --config.file=sample-config.yml
 ```
 
-The exporter's Alertmanager API connection can also be configured by defining the following environment variable(s).
+The exporter's Alertmanager API connection can also be configured by defining the following environment variable(s). If they are present, they will take precedence over the corresponding variables in the config file.
 
 Environment Variable | Description
 ---------------------| -----------
-ALERTMANAGER_URL | URL of the exported alertmanager api (eg: "http://localhost:9093/api/v2")
+ALERTMANAGER_URL | URL of the exported alertmanager api (eg: "http://localhost:9093/")
 
 
 Use -h flag to list available options.
@@ -59,7 +53,7 @@ An example can be found in
 
 Configuration element | Description
 --------------------- | -----------
-alertmanager_url | (Mandatory) URL of the exported alertmanager api (eg: "http://localhost:9093/api/v2")
+alertmanager_url | (Mandatory) URL of the exported alertmanager api (eg: "http://localhost:9093/")
 
 ## Exposed metrics
 
