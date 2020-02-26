@@ -12,6 +12,10 @@ import (
 	"github.com/prometheus/alertmanager/api/v2/models"
 )
 
+const (
+	apiVersion = "/api/v2/"
+)
+
 type AlertmanagerAPI interface {
 	ListSilences() (models.GettableSilences, error)
 }
@@ -22,8 +26,9 @@ type AlertmanagerClient struct {
 }
 
 // NewAlertManagerClient creates a client to work with
-func NewAlertManagerClient(apiURL string) *AlertmanagerClient {
-	return &AlertmanagerClient{AlertManagerAPIURL: apiURL}
+func NewAlertManagerClient(alertmanager string) *AlertmanagerClient {
+	u := alertmanager + "/" + apiVersion
+	return &AlertmanagerClient{AlertManagerAPIURL: u}
 }
 
 func (ac *AlertmanagerClient) constructURL(pairs ...string) (string, error) {
