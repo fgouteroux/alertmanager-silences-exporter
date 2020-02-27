@@ -5,9 +5,6 @@ pkgs      = $(shell $(GO) list ./... | grep -v /vendor/)
 PREFIX                  ?= $(shell pwd)
 BIN_DIR                 ?= $(shell pwd)
 
-help:
-	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
-
 golint: ## downloads golint
 	@go get -u golang.org/x/lint/golint
 
