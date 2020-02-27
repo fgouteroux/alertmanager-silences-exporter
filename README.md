@@ -59,14 +59,22 @@ alertmanager_url | (Mandatory) URL of the exported alertmanager api (eg: "http:/
 
 Metric | Description
 ------ | -----------
-alertmanager_silence | [AlertManager Silences](https://prometheus.io/docs/alerting/alertmanager/#silences) exposed as gauge values, to confirm if a silence is currently active for the labels associated to it.
+alertmanager_silence_info | [AlertManager Silences](https://prometheus.io/docs/alerting/alertmanager/#silences) exposed as gauge values, to confirm if a silence is currently active for the labels associated to it.
+alertmanager_silence_start_seconds | The start time of an Alertmanager Silence, exposed in unix/epoch time.
+alertmanager_silence_end_seconds | The end time of an Alertmanager Silence, exposed in unix/epoch time.
 
 Example:
 
 ```
 # HELP alertmanager_silence Alertmanager silence extract
 # TYPE alertmanager_silence gauge
-alertmanager_silence{resource_group="my-group-01",resource_name="my-vm-01",comment="Silence",createdBy="developer",endsAt="2020-02-29T23:11:44.603Z",foo="bar",id="abcd-1234",startsAt="2020-02-20T22:12:33.533Z",status="active"} 1
+alertmanager_silence{comment="me",createdBy="me",id="7aa4fb96-9aac-4a3a-899c-ee5f20afd730",matcher_customer="foo",status="active"} 1
+# HELP alertmanager_silence_end_seconds Alertmanager silence end time, elapsed seconds since epoch.
+# TYPE alertmanager_silence_end_seconds gauge
+alertmanager_silence_end_seconds{id="7aa4fb96-9aac-4a3a-899c-ee5f20afd730"} 1 1582909200000
+# HELP alertmanager_silence_start_seconds Alertmanager silence start time, elapsed seconds since epoch.
+# TYPE alertmanager_silence_start_seconds gauge
+alertmanager_silence_start_seconds{id="7aa4fb96-9aac-4a3a-899c-ee5f20afd730"} 1 1582571132089
 ```
 
 ## Contributing
