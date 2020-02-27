@@ -1,49 +1,45 @@
 GO    	 := GO111MODULE=on go
+PROMU := $(GOPATH)/bin/promu
 pkgs      = $(shell $(GO) list ./... | grep -v /vendor/)
-arch      = amd64  ## default architecture
-platforms = darwin linux windows
-package   = alertmanager-silences-exporter
 
 PREFIX                  ?= $(shell pwd)
 BIN_DIR                 ?= $(shell pwd)
-
-all: vet format test build
-
-build: ## build executable for current platform
-	@echo ">> building..."
-	@$(GO) build
-
-xbuild: ## cross build executables for all defined platforms
-	@echo ">> cross building executable(s)..."
-
-	@for platform in $(platforms); do \
-		echo "build for $$platform/$(arch)" ;\
-		name=$(package)'-'$$platform'-'$(arch) ;\
-		if [ $$platform = "windows" ]; then \
-			name=$$name'.exe' ;\
-		fi ;\
-		echo $$name ;\
-		GOOS=$$platform GOARCH=$(arch) $(GO) build -o $$name . ;\
-	done
-
-test:
-	@echo ">> running tests.."
-	@$(GO) test -v -short $(pkgs)
-
-format: ## format code
-	@echo ">> formatting code"
-	@$(GO) fmt $(pkgs)
-
-vet: ## vet code
-	@echo ">> vetting code"
-	@$(GO) vet $(pkgs)
-
-lint: golint ## lint code
-	@echo ">> linting code"
-	@! golint $(pkgs) | grep '^'
 
 help:
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
 
 golint: ## downloads golint
 	@go get -u golang.org/x/lint/golint
+
+all: vet format build test
+
+test: build
+	@echo ">> running tests"
+	@$(GO) test -short $(pkgs)
+
+style:
+	@echo ">> checking code style"
+	@! gofmt -d $(shell find . -path ./vendor -prune -o -name '*.go' -print) | grep '^'
+
+format:
+	@echo ">> formatting code"
+	@$(GO) fmt $(pkgs)
+
+vet:
+	@echo ">> vetting code"
+	@$(GO) vet $(pkgs)
+
+build:
+	@echo ">> building binaries"
+	@$(PROMU) build --prefix $(PREFIX)
+
+tarball: promu
+	@echo ">> building release tarball"
+	@$(PROMU) tarball --prefix $(PREFIX) $(BIN_DIR)
+
+getpromu:
+	@GOOS=$(shell uname -s | tr A-Z a-z) \
+		GOARCH=$(subst x86_64,amd64,$(patsubst i%86,386,$(shell uname -m))) \
+		$(GO) get github.com/prometheus/promu
+
+.PHONY: all style format build test vet tarball getpromu
