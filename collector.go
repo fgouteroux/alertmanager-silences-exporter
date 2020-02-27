@@ -4,6 +4,7 @@ import (
 	"log"
 	"os"
 	"regexp"
+	"time"
 
 	"github.com/prometheus/alertmanager/api/v2/models"
 
@@ -25,12 +26,10 @@ func (s *Silence) Decorate() error {
 	s.Labels["id"] = *s.Gettable.ID
 	s.Labels["comment"] = *s.Gettable.Comment
 	s.Labels["createdBy"] = *s.Gettable.CreatedBy
-	s.Labels["startsAt"] = s.Gettable.StartsAt.String()
-	s.Labels["endsAt"] = s.Gettable.EndsAt.String()
 	s.Labels["status"] = *s.Gettable.Status.State
 
 	for _, m := range s.Gettable.Matchers {
-		s.Labels[*m.Name] = *m.Value
+		s.Labels["matcher_"+*m.Name] = *m.Value
 	}
 
 	s.Status = *s.Gettable.Status.State
@@ -77,9 +76,33 @@ func (c *AlertmanagerSilencesCollector) Collect(ch chan<- prometheus.Metric) {
 }
 
 func (c *AlertmanagerSilencesCollector) extractMetric(ch chan<- prometheus.Metric, silence *Silence) {
+	startTime, err := time.Parse(time.RFC3339, silence.Gettable.StartsAt.String())
+	if err != nil {
+		log.Printf("cannot parse start time of silence with ID '%s'\n", silence.Labels["id"])
+		return
+	}
+
+	endTime, err := time.Parse(time.RFC3339, silence.Gettable.EndsAt.String())
+	if err != nil {
+		log.Printf("cannot parse end time of silence with ID '%s'\n", silence.Labels["id"])
+		return
+	}
+
 	ch <- prometheus.MustNewConstMetric(
-		prometheus.NewDesc("alertmanager_silence", "Alertmanager silence extract", nil, silence.Labels),
+		prometheus.NewDesc("alertmanager_silence_info", "Alertmanager silence info metric", nil, silence.Labels),
 		prometheus.GaugeValue,
 		1,
 	)
+
+	ch <- prometheus.NewMetricWithTimestamp(startTime, prometheus.MustNewConstMetric(
+		prometheus.NewDesc("alertmanager_silence_start_seconds", "Alertmanager silence start time, elapsed seconds since epoch", nil, map[string]string{"id": silence.Labels["id"]}),
+		prometheus.GaugeValue,
+		1,
+	))
+
+	ch <- prometheus.NewMetricWithTimestamp(endTime, prometheus.MustNewConstMetric(
+		prometheus.NewDesc("alertmanager_silence_end_seconds", "Alertmanager silence end time, elapsed seconds since epoch", nil, map[string]string{"id": silence.Labels["id"]}),
+		prometheus.GaugeValue,
+		1,
+	))
 }
