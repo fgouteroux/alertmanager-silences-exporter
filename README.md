@@ -66,8 +66,8 @@ alertmanager_silence_end_seconds | The end time of an Alertmanager Silence, expo
 Example:
 
 ```
-# HELP alertmanager_silence Alertmanager silence extract
-# TYPE alertmanager_silence gauge
+# HELP alertmanager_silence_info Alertmanager silence info metric
+# TYPE alertmanager_silence_info gauge
 alertmanager_silence{comment="me",createdBy="me",id="7aa4fb96-9aac-4a3a-899c-ee5f20afd730",matcher_customer="foo",status="active"} 1
 # HELP alertmanager_silence_end_seconds Alertmanager silence end time, elapsed seconds since epoch.
 # TYPE alertmanager_silence_end_seconds gauge
