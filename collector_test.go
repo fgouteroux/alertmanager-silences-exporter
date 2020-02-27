@@ -30,7 +30,7 @@ func TestNewAlertmanagerSilencesCollector_Conf_OK(t *testing.T) {
 
 	asc := NewAlertmanagerSilencesCollector(conf, &AlertmanagerClient{})
 	got := asc.Config.AlertmanagerURL
-	want := "http://localhost:9093/api/v2"
+	want := "http://localhost:9093/"
 
 	if got != want {
 		t.Errorf("got '%s' want '%s'", got, want)
@@ -68,13 +68,11 @@ func TestDecorate_OK(t *testing.T) {
 		Labels map[string]string
 	}{
 		"active", map[string]string{
-			"id":        id,
-			"comment":   comment,
-			"createdBy": createdBy,
-			"startsAt":  startsAt.String(),
-			"endsAt":    endsAt.String(),
-			"status":    status,
-			name:        value,
+			"id":              id,
+			"comment":         comment,
+			"createdBy":       createdBy,
+			"status":          status,
+			"matcher_" + name: value,
 		},
 	}
 
@@ -147,9 +145,15 @@ func TestCollector_Collect_OK(t *testing.T) {
 		t.Errorf("Wrong status code: got %v, want %v", status, http.StatusOK)
 	}
 
-	want := `# HELP alertmanager_silence Alertmanager silence extract
-# TYPE alertmanager_silence gauge
-alertmanager_silence{comment="Silence",createdBy="developer",endsAt="2020-02-29T23:11:44.603Z",foo="bar",id="abcd-1234",startsAt="2020-02-20T22:12:33.533Z",status="active"} 1
+	want := `# HELP alertmanager_silence_end_seconds Alertmanager silence end time, elapsed seconds since epoch
+# TYPE alertmanager_silence_end_seconds gauge
+alertmanager_silence_end_seconds{id="abcd-1234"} 1 1583017904603
+# HELP alertmanager_silence_info Alertmanager silence info metric
+# TYPE alertmanager_silence_info gauge
+alertmanager_silence_info{comment="Silence",createdBy="developer",id="abcd-1234",matcher_foo="bar",status="active"} 1
+# HELP alertmanager_silence_start_seconds Alertmanager silence start time, elapsed seconds since epoch
+# TYPE alertmanager_silence_start_seconds gauge
+alertmanager_silence_start_seconds{id="abcd-1234"} 1 1582236753533
 `
 
 	if rr.Body.String() != want {
