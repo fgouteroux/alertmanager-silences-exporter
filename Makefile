@@ -5,8 +5,6 @@ pkgs      = $(shell $(GO) list ./... | grep -v /vendor/)
 PREFIX                  ?= $(shell pwd)
 BIN_DIR                 ?= $(shell pwd)
 
-golint: ## downloads golint
-	@go get -u golang.org/x/lint/golint
 
 all: vet format build test
 
@@ -33,6 +31,9 @@ build:
 tarball: promu
 	@echo ">> building release tarball"
 	@$(PROMU) tarball --prefix $(PREFIX) $(BIN_DIR)
+
+golint: ## downloads golint
+	@go get -u golang.org/x/lint/golint
 
 getpromu:
 	@GOOS=$(shell uname -s | tr A-Z a-z) \
