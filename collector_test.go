@@ -17,7 +17,7 @@ type MockedAlertmanagerClient struct {
 	mock.Mock
 }
 
-func (mock MockedAlertmanagerClient) ListSilences() (models.GettableSilences, error) {
+func (mock *MockedAlertmanagerClient) ListSilences() (models.GettableSilences, error) {
 	args := mock.Called()
 	return args.Get(0).(models.GettableSilences), args.Error(1)
 }
@@ -102,7 +102,7 @@ func CallExporter(collector *AlertmanagerSilencesCollector) *httptest.ResponseRe
 }
 
 func TestCollector_Collect_OK(t *testing.T) {
-	mac := MockedAlertmanagerClient{}
+	mac := &MockedAlertmanagerClient{}
 
 	conf, err := loadConfig("sample-config.yml")
 	if err != nil {
