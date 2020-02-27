@@ -11,7 +11,7 @@ import (
 )
 
 func TestConstructURL_OK(t *testing.T) {
-	ac := NewAlertManagerClient("http://localhost:9093/api/v2")
+	ac := NewAlertManagerClient("http://localhost:9093/")
 	var cases = []struct {
 		paths []string
 		want  string

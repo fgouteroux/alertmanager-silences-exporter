@@ -17,14 +17,14 @@ func TestLoadConfig_No_Env_No_Config(t *testing.T) {
 func TestLoadConfig_Config_OK(t *testing.T) {
 	confStr := `
 ---
-alertmanager_url: "http://localhost:9093/api/v2"
+alertmanager_url: "http://localhost:9093/"
 `
 	err := ioutil.WriteFile("test-config.yml", []byte(confStr), 0755)
 	if err != nil {
 		t.Error(err)
 	}
 
-	want := "http://localhost:9093/api/v2"
+	want := "http://localhost:9093/"
 	conf, err := loadConfig("sample-config.yml")
 	if err != nil {
 		t.Error(err)
@@ -41,7 +41,7 @@ alertmanager_url: "http://localhost:9093/api/v2"
 }
 
 func TestNewAlertmanagerSilencesCollector_Env_OK(t *testing.T) {
-	err := os.Setenv("ALERTMANAGER_URL", "http://localhost:9093/api/v2")
+	err := os.Setenv("ALERTMANAGER_URL", "http://localhost:9093/")
 	if err != nil {
 		t.Error(err)
 	}
@@ -53,7 +53,7 @@ func TestNewAlertmanagerSilencesCollector_Env_OK(t *testing.T) {
 
 	asc := NewAlertmanagerSilencesCollector(conf, &AlertmanagerClient{})
 	got := asc.Config.AlertmanagerURL
-	want := "http://localhost:9093/api/v2"
+	want := "http://localhost:9093/"
 
 	if got != want {
 		t.Errorf("got '%s' want '%s'", got, want)
