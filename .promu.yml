@@ -1,5 +1,5 @@
 repository:
-  path: github.com/FXinnovation/alertmanager-maintenance-scheduler
+  path: github.com/FXinnovation/alertmanager-silences-exporter
 build:
   binaries:
     - name: alertmanager-maintenance-scheduler
