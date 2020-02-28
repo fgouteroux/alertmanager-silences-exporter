@@ -68,7 +68,7 @@ Example:
 ```
 # HELP alertmanager_silence_info Alertmanager silence info metric
 # TYPE alertmanager_silence_info gauge
-alertmanager_silence{comment="me",createdBy="me",id="7aa4fb96-9aac-4a3a-899c-ee5f20afd730",matcher_customer="foo",status="active"} 1
+alertmanager_silence_info{comment="me",createdBy="me",id="7aa4fb96-9aac-4a3a-899c-ee5f20afd730",matcher_customer="foo",status="active"} 1
 # HELP alertmanager_silence_end_seconds Alertmanager silence end time, elapsed seconds since epoch.
 # TYPE alertmanager_silence_end_seconds gauge
 alertmanager_silence_end_seconds{id="7aa4fb96-9aac-4a3a-899c-ee5f20afd730"} 1 1582909200000
