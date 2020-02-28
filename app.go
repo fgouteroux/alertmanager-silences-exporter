@@ -27,16 +27,6 @@ type App struct {
 	client AlertmanagerAPI
 }
 
-func (a *App) listMetrics(w http.ResponseWriter, r *http.Request) {
-	registry := prometheus.NewRegistry()
-	collector := NewAlertmanagerSilencesCollector(a.config, a.client)
-	registry.MustRegister(collector)
-
-	h := promhttp.HandlerFor(registry, promhttp.HandlerOpts{})
-
-	h.ServeHTTP(w, r)
-}
-
 func indexHandler(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte(`<html>
             <head>
@@ -64,7 +54,11 @@ func main() {
 	}
 
 	router = mux.NewRouter().StrictSlash(true)
-	router.HandleFunc(*metricsPath, application.listMetrics).Methods("GET").Name("listMetrics")
+
+	collector := NewAlertmanagerSilencesCollector(application.config, application.client)
+	prometheus.MustRegister(collector)
+
+	router.Handle(*metricsPath, promhttp.Handler())
 	router.HandleFunc("/", indexHandler).Name("indexHandler")
 	http.Handle("/", router)
 
