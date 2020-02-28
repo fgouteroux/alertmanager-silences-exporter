@@ -12,8 +12,10 @@ import (
 )
 
 var (
-	configFile   = kingpin.Flag("config.file", "Path to config file.").Short('c').Required().String()
-	genericError = 1
+	configFile    = kingpin.Flag("config.file", "Path to config file.").Short('c').Required().String()
+	listenAddress = kingpin.Flag("web.listen-address", "The address to listen on for HTTP requests.").Default(":9666").String()
+	metricsPath   = kingpin.Flag("web.telemetry-path", "Path under which to expose metrics.").Default("/metrics").String()
+	genericError  = 1
 
 	router *mux.Router
 )
@@ -61,12 +63,12 @@ func main() {
 	}
 
 	router = mux.NewRouter().StrictSlash(true)
-	router.HandleFunc("/metrics", application.listMetrics).Methods("GET").Name("listMetrics")
+	router.HandleFunc(*metricsPath, application.listMetrics).Methods("GET").Name("listMetrics")
 	router.HandleFunc("/", indexHandler).Name("indexHandler")
 	http.Handle("/", router)
 
 	log.Infof("alertmanager-silences-exporter listening on port %d", 9666)
-	if err := http.ListenAndServe(":9666", nil); err != nil {
+	if err := http.ListenAndServe(*listenAddress, nil); err != nil {
 		log.Fatalf("Error starting HTTP server: %v", err)
 	}
 }
