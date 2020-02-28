@@ -68,10 +68,7 @@ func (c *AlertmanagerSilencesCollector) Collect(ch chan<- prometheus.Metric) {
 			log.Printf("Error exporting silence %v: %s\n", silence, err)
 			continue
 		}
-
-		if silence.Status == "active" {
-			c.extractMetric(ch, silence)
-		}
+		c.extractMetric(ch, silence)
 	}
 }
 
@@ -94,15 +91,15 @@ func (c *AlertmanagerSilencesCollector) extractMetric(ch chan<- prometheus.Metri
 		1,
 	)
 
-	ch <- prometheus.NewMetricWithTimestamp(startTime, prometheus.MustNewConstMetric(
+	ch <- prometheus.MustNewConstMetric(
 		prometheus.NewDesc("alertmanager_silence_start_seconds", "Alertmanager silence start time, elapsed seconds since epoch", nil, map[string]string{"id": silence.Labels["id"]}),
 		prometheus.GaugeValue,
-		1,
-	))
+		float64(startTime.Unix()),
+	)
 
-	ch <- prometheus.NewMetricWithTimestamp(endTime, prometheus.MustNewConstMetric(
+	ch <- prometheus.MustNewConstMetric(
 		prometheus.NewDesc("alertmanager_silence_end_seconds", "Alertmanager silence end time, elapsed seconds since epoch", nil, map[string]string{"id": silence.Labels["id"]}),
 		prometheus.GaugeValue,
-		1,
-	))
+		float64(endTime.Unix()),
+	)
 }
