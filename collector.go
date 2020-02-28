@@ -56,6 +56,8 @@ func (c *AlertmanagerSilencesCollector) Collect(ch chan<- prometheus.Metric) {
 	silences, err := c.AlertmanagerClient.ListSilences()
 	if err != nil {
 		log.Errorf("unable to list silences: %s", err.Error())
+		ch <- prometheus.NewInvalidMetric(amErrorDesc, err)
+		return
 	}
 
 	for _, s := range silences {

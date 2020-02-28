@@ -16,6 +16,7 @@ var (
 	listenAddress = kingpin.Flag("web.listen-address", "The address to listen on for HTTP requests.").Default(":9666").String()
 	metricsPath   = kingpin.Flag("web.telemetry-path", "Path under which to expose metrics.").Default("/metrics").String()
 	genericError  = 1
+	amErrorDesc   = prometheus.NewDesc("alertmanager_error", "Error collecting metrics", nil, nil)
 
 	router *mux.Router
 )
