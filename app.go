@@ -66,7 +66,7 @@ func main() {
 	http.Handle("/", router)
 
 	log.Infof("alertmanager-silences-exporter listening on port %d", 9666)
-	if err := http.ListenAndServe("0:9666", nil); err != nil {
+	if err := http.ListenAndServe(":9666", nil); err != nil {
 		log.Fatalf("Error starting HTTP server: %v", err)
 	}
 }
