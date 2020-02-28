@@ -1,7 +1,6 @@
 package main
 
 import (
-	"os"
 	"regexp"
 	"time"
 
@@ -56,8 +55,7 @@ func (c *AlertmanagerSilencesCollector) Describe(ch chan<- *prometheus.Desc) {
 func (c *AlertmanagerSilencesCollector) Collect(ch chan<- prometheus.Metric) {
 	silences, err := c.AlertmanagerClient.ListSilences()
 	if err != nil {
-		log.Println(err)
-		os.Exit(1)
+		log.Errorf("unable to list silences: %s", err.Error())
 	}
 
 	for _, s := range silences {
@@ -71,13 +69,13 @@ func (c *AlertmanagerSilencesCollector) Collect(ch chan<- prometheus.Metric) {
 func (c *AlertmanagerSilencesCollector) extractMetric(ch chan<- prometheus.Metric, silence *Silence) {
 	startTime, err := time.Parse(time.RFC3339, silence.Gettable.StartsAt.String())
 	if err != nil {
-		log.Printf("cannot parse start time of silence with ID '%s'\n", silence.Labels["id"])
+		log.Errorf("cannot parse start time of silence with ID '%s'\n", silence.Labels["id"])
 		return
 	}
 
 	endTime, err := time.Parse(time.RFC3339, silence.Gettable.EndsAt.String())
 	if err != nil {
-		log.Printf("cannot parse end time of silence with ID '%s'\n", silence.Labels["id"])
+		log.Errorf("cannot parse end time of silence with ID '%s'\n", silence.Labels["id"])
 		return
 	}
 
