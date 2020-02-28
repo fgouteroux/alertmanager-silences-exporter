@@ -17,10 +17,6 @@ func TestConstructURL_OK(t *testing.T) {
 		want  string
 	}{
 		{[]string{"silences"}, "http://localhost:9093/api/v2/silences"},
-		{[]string{"silences"}, "http://localhost:9093/api/v2/silences"},
-		{[]string{"silences"}, "http://localhost:9093/api/v2/silences"},
-
-		{[]string{"silence", "1234"}, "http://localhost:9093/api/v2/silence/1234"},
 		{[]string{"silence", "1234"}, "http://localhost:9093/api/v2/silence/1234"},
 	}
 
