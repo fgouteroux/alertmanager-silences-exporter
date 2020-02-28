@@ -43,7 +43,7 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
             </head>
             <body>
             <h1>Alertmanager Silences Exporter</h1>
-						<p><a href="/metrics">Metrics</a></p>
+						<p><a href="` + *metricsPath + `">Metrics</a></p>
             </body>
             </html>`))
 }
