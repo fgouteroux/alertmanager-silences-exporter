@@ -1,13 +1,13 @@
 package main
 
 import (
-	"log"
 	"net/http"
 	"os"
 
 	"github.com/gorilla/mux"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
+	"github.com/prometheus/common/log"
 	"gopkg.in/alecthomas/kingpin.v2"
 )
 
@@ -51,7 +51,7 @@ func main() {
 
 	appConf, err := loadConfig(*configFile)
 	if err != nil {
-		log.Printf("error loading config: %s\n", err.Error())
+		log.Fatalf("error loading config: %s\n", err.Error())
 		os.Exit(genericError)
 	}
 
@@ -65,7 +65,7 @@ func main() {
 	router.HandleFunc("/", indexHandler).Name("indexHandler")
 	http.Handle("/", router)
 
-	log.Printf("alertmanager-silences-exporter listening on port %d", 9666)
+	log.Infof("alertmanager-silences-exporter listening on port %d", 9666)
 	if err := http.ListenAndServe("0:9666", nil); err != nil {
 		log.Fatalf("Error starting HTTP server: %v", err)
 	}

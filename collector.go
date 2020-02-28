@@ -1,10 +1,11 @@
 package main
 
 import (
-	"log"
 	"os"
 	"regexp"
 	"time"
+
+	"github.com/prometheus/common/log"
 
 	"github.com/prometheus/alertmanager/api/v2/models"
 
