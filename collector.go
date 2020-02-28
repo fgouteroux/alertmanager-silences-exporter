@@ -21,7 +21,7 @@ type Silence struct {
 	Status   string
 }
 
-func (s *Silence) Decorate() error {
+func (s *Silence) Decorate() {
 	s.Labels = map[string]string{}
 	s.Labels["id"] = *s.Gettable.ID
 	s.Labels["comment"] = *s.Gettable.Comment
@@ -33,7 +33,6 @@ func (s *Silence) Decorate() error {
 	}
 
 	s.Status = *s.Gettable.Status.State
-	return nil
 }
 
 // AlertmanagerSilencesCollector collects Alertmanager Silence metrics
@@ -63,11 +62,7 @@ func (c *AlertmanagerSilencesCollector) Collect(ch chan<- prometheus.Metric) {
 	for _, s := range silences {
 		silence := &Silence{Gettable: s}
 
-		err = silence.Decorate()
-		if err != nil {
-			log.Printf("Error exporting silence %v: %s\n", silence, err)
-			continue
-		}
+		silence.Decorate()
 		c.extractMetric(ch, silence)
 	}
 }

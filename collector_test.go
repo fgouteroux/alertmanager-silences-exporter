@@ -77,10 +77,7 @@ func TestDecorate_OK(t *testing.T) {
 	}
 
 	got := &Silence{Gettable: gettable}
-	err := got.Decorate()
-	if err != nil {
-		t.Error(err)
-	}
+	got.Decorate()
 
 	if got.Status != want.Status {
 		t.Errorf("got '%s' want '%s'", got.Status, want.Status)
@@ -147,13 +144,13 @@ func TestCollector_Collect_OK(t *testing.T) {
 
 	want := `# HELP alertmanager_silence_end_seconds Alertmanager silence end time, elapsed seconds since epoch
 # TYPE alertmanager_silence_end_seconds gauge
-alertmanager_silence_end_seconds{id="abcd-1234"} 1 1583017904603
+alertmanager_silence_end_seconds{id="abcd-1234"} 1.583017904e+09
 # HELP alertmanager_silence_info Alertmanager silence info metric
 # TYPE alertmanager_silence_info gauge
 alertmanager_silence_info{comment="Silence",createdBy="developer",id="abcd-1234",matcher_foo="bar",status="active"} 1
 # HELP alertmanager_silence_start_seconds Alertmanager silence start time, elapsed seconds since epoch
 # TYPE alertmanager_silence_start_seconds gauge
-alertmanager_silence_start_seconds{id="abcd-1234"} 1 1582236753533
+alertmanager_silence_start_seconds{id="abcd-1234"} 1.582236753e+09
 `
 
 	if rr.Body.String() != want {
