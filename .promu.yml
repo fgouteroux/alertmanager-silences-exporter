@@ -2,7 +2,7 @@ repository:
   path: github.com/FXinnovation/alertmanager-silences-exporter
 build:
   binaries:
-    - name: alertmanager-maintenance-scheduler
+    - name: alertmanager-silences-exporter
   flags: -a -tags 'netgo static_build'
   ldflags: |
     -X github.com/prometheus/common/version.Version={{.Version}}
