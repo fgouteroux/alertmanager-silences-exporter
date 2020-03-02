@@ -12,7 +12,7 @@ import (
 )
 
 var (
-	configFile    = kingpin.Flag("config.file", "Path to config file.").Short('c').Required().String()
+	configFile    = kingpin.Flag("config.file", "Path to config file.").Short('c').Default("config/config.yml").String()
 	listenAddress = kingpin.Flag("web.listen-address", "The address to listen on for HTTP requests.").Default(":9666").String()
 	metricsPath   = kingpin.Flag("web.telemetry-path", "Path under which to expose metrics.").Default("/metrics").String()
 	genericError  = 1
