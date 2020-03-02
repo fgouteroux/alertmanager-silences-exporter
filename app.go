@@ -62,7 +62,7 @@ func main() {
 	router.HandleFunc("/", indexHandler).Name("indexHandler")
 	http.Handle("/", router)
 
-	log.Infof("alertmanager-silences-exporter listening on port %d", *listenAddress)
+	log.Infof("alertmanager-silences-exporter listening on port %v", *listenAddress)
 	if err := http.ListenAndServe(*listenAddress, nil); err != nil {
 		log.Fatalf("Error starting HTTP server: %v", err)
 	}
