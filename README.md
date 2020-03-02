@@ -66,15 +66,15 @@ alertmanager_silence_end_seconds | The end time of an Alertmanager Silence, expo
 Example:
 
 ```
+# HELP alertmanager_silence_end_seconds Alertmanager silence end time, elapsed seconds since epoch
+# TYPE alertmanager_silence_end_seconds gauge
+alertmanager_silence_end_seconds{id="7aa4fb96-9aac-4a3a-899c-ee5f20afd730"} 1.5829092e+09
 # HELP alertmanager_silence_info Alertmanager silence info metric
 # TYPE alertmanager_silence_info gauge
 alertmanager_silence_info{comment="me",createdBy="me",id="7aa4fb96-9aac-4a3a-899c-ee5f20afd730",matcher_customer="foo",status="active"} 1
-# HELP alertmanager_silence_end_seconds Alertmanager silence end time, elapsed seconds since epoch.
-# TYPE alertmanager_silence_end_seconds gauge
-alertmanager_silence_end_seconds{id="7aa4fb96-9aac-4a3a-899c-ee5f20afd730"} 1 1582909200000
-# HELP alertmanager_silence_start_seconds Alertmanager silence start time, elapsed seconds since epoch.
+# HELP alertmanager_silence_start_seconds Alertmanager silence start time, elapsed seconds since epoch
 # TYPE alertmanager_silence_start_seconds gauge
-alertmanager_silence_start_seconds{id="7aa4fb96-9aac-4a3a-899c-ee5f20afd730"} 1 1582571132089
+alertmanager_silence_start_seconds{id="7aa4fb96-9aac-4a3a-899c-ee5f20afd730"} 1.582571132e+09
 ```
 
 ## Contributing
