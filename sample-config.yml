@@ -1,0 +1,2 @@
+---
+alertmanager_url: "http://localhost:9093/"
