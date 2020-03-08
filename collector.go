@@ -81,10 +81,15 @@ func (c *AlertmanagerSilencesCollector) extractMetric(ch chan<- prometheus.Metri
 		return
 	}
 
+	state := 0
+	if silence.Status == "active" {
+		state = 1
+	}
+
 	ch <- prometheus.MustNewConstMetric(
 		prometheus.NewDesc("alertmanager_silence_info", "Alertmanager silence info metric", nil, silence.Labels),
 		prometheus.GaugeValue,
-		1,
+		float64(state),
 	)
 
 	ch <- prometheus.MustNewConstMetric(
