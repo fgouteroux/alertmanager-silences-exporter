@@ -78,7 +78,7 @@ docker run -p 9666:9666 -v /path/on/host/config/config.yml:/opt/alertmanager-sil
 
 Metric | Description
 ------ | -----------
-alertmanager_silence_info | [AlertManager Silences](https://prometheus.io/docs/alerting/alertmanager/#silences) exposed as gauge values, to confirm if a silence is currently active for the labels associated to it.
+alertmanager_silence_info | [AlertManager Silences](https://prometheus.io/docs/alerting/alertmanager/#silences) exposed as gauge values. Returns 1 if a silence is active, and 0 for all other statuses.
 alertmanager_silence_start_seconds | The start time of an Alertmanager Silence, exposed in unix/epoch time.
 alertmanager_silence_end_seconds | The end time of an Alertmanager Silence, exposed in unix/epoch time.
 
