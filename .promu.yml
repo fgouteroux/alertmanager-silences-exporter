@@ -1,5 +1,5 @@
 repository:
-  path: github.com/FXinnovation/alertmanager-silences-exporter
+  path: github.com/fgouteroux/alertmanager-silences-exporter
 build:
   binaries:
     - name: alertmanager-silences-exporter

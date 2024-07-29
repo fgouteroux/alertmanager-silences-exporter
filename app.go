@@ -28,7 +28,7 @@ type App struct {
 }
 
 func indexHandler(w http.ResponseWriter, r *http.Request) {
-	w.Write([]byte(`<html>
+	_, _ = w.Write([]byte(`<html>
             <head>
             <title>Alertmanager Silences Exporter</title>
             </head>
@@ -50,7 +50,12 @@ func main() {
 
 	application := App{
 		config: appConf,
-		client: NewAlertManagerClient(appConf.AlertmanagerURL),
+		client: NewAlertManagerClient(
+			appConf.AlertmanagerURL,
+			appConf.AlertmanagerUsername,
+			appConf.AlertmanagerPassword,
+			"",
+		),
 	}
 
 	router = mux.NewRouter().StrictSlash(true)

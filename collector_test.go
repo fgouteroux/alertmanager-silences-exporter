@@ -77,7 +77,7 @@ func TestDecorate_OK(t *testing.T) {
 	}
 
 	got := &Silence{Gettable: gettable}
-	got.Decorate()
+	got.Decorate("")
 
 	if got.Status != want.Status {
 		t.Errorf("got '%s' want '%s'", got.Status, want.Status)

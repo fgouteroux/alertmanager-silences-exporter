@@ -10,7 +10,7 @@ To run this project, you will need a [working Go environment](https://golang.org
 ### Installing
 
 ```bash
-go get -u github.com/FXinnovation/alertmanager-silences-exporter
+go get -u github.com/fgouteroux/alertmanager-silences-exporter
 ```
 
 ## Building
@@ -34,6 +34,8 @@ The exporter's Alertmanager API connection can also be configured by defining th
 Environment Variable | Description
 ---------------------| -----------
 ALERTMANAGER_URL | URL of the exported alertmanager api (eg: "http://localhost:9093/")
+ALERTMANAGER_USERNAME | alertmanager api username
+ALERTMANAGER_PASSWORD | alertmanager api password
 
 
 Use -h flag to list available options.
@@ -49,30 +51,15 @@ make test
 ## Configuration
 
 An example can be found in
-[sample-config.yml](https://github.com/FXinnovation/alertmanager-silences-exporter/blob/master/sample-config.yml).
+[sample-config.yml](https://github.com/fgouteroux/alertmanager-silences-exporter/blob/master/sample-config.yml).
 
 Configuration element | Description
 --------------------- | -----------
-alertmanager_url | (Mandatory) URL of the exported alertmanager api (eg: "http://localhost:9093/")
-
-## Docker image
-
-You can run images published in [dockerhub](https://hub.docker.com/r/fxinnovation/alertmanager-silences-exporter).
-
-You can also build a docker image using:
-
-```bash
-make docker
-```
-
-The resulting image is named `fxinnovation/alertmanager-silences-exporter:<git-branch>`.
-
-The image exposes port 9666 and expects a config in `/opt/alertmanager-silences-exporter/config.yml`.
-To configure it, you can pass the environment variables, and bind-mount a config from your host:
-
-```bash
-docker run -p 9666:9666 -v /path/on/host/config/config.yml:/opt/alertmanager-silences-exporter/config/config.yml -e ALERTMANAGER_URL="http://localhost:9093/" fxinnovation/alertmanager-silences-exporter:<git-branch>
-```
+alertmanager_url | (Mandatory) URL of the exported alertmanager api (eg: "http://localhost:9093/") (string)
+alertmanager_username | (Optional) alertmanager api username (string)
+alertmanager_password | (Optional) alertmanager api password (string)
+expired_silences | (Optional) Collect expired silences metrics (boolean)
+tenants          | (Optional) Collect multi-tenant silences metrics (list of string)
 
 ## Exposed metrics
 
@@ -98,8 +85,8 @@ alertmanager_silence_start_seconds{id="7aa4fb96-9aac-4a3a-899c-ee5f20afd730"} 1.
 
 ## Contributing
 
-Refer to [CONTRIBUTING.md](https://github.com/FXinnovation/alertmanager-silences-exporter/blob/master/CONTRIBUTING.md).
+Refer to [CONTRIBUTING.md](https://github.com/fgouteroux/alertmanager-silences-exporter/blob/master/CONTRIBUTING.md).
 
 ## License
 
-Apache License 2.0, see [LICENSE](https://github.com/FXinnovation/alertmanager-silences-exporter/blob/master/LICENSE).
+Apache License 2.0, see [LICENSE](https://github.com/fgouteroux/alertmanager-silences-exporter/blob/master/LICENSE).

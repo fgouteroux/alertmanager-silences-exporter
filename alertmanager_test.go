@@ -11,7 +11,7 @@ import (
 )
 
 func TestConstructURL_OK(t *testing.T) {
-	ac := NewAlertManagerClient("http://localhost:9093/")
+	ac := NewAlertManagerClient("http://localhost:9093/", "", "", "")
 	var cases = []struct {
 		paths []string
 		want  string
@@ -86,7 +86,7 @@ func TestAlertmanagerClient_listSilences(t *testing.T) {
 		},
 	}}
 
-	ac := NewAlertManagerClient(ts.URL)
+	ac := NewAlertManagerClient(ts.URL, "", "", "")
 	got, err := ac.ListSilences()
 	if err != nil {
 		t.Errorf("unexpected error received: '%s'", err.Error())

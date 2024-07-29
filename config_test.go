@@ -1,7 +1,6 @@
 package main
 
 import (
-	"io/ioutil"
 	"os"
 	"testing"
 )
@@ -19,7 +18,7 @@ func TestLoadConfig_Config_OK(t *testing.T) {
 ---
 alertmanager_url: "http://localhost:9093/"
 `
-	err := ioutil.WriteFile("test-config.yml", []byte(confStr), 0755)
+	err := os.WriteFile("test-config.yml", []byte(confStr), 0755)
 	if err != nil {
 		t.Error(err)
 	}

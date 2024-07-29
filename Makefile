@@ -26,7 +26,7 @@ vet:
 	@echo ">> vetting code"
 	@$(GO) vet $(pkgs)
 
-build:
+build promu:
 	@echo ">> building binaries"
 	@$(PROMU) build --prefix $(PREFIX)
 

@@ -1,33 +1,51 @@
-module github.com/FXinnovation/alertmanager-silences-exporter
+module github.com/fgouteroux/alertmanager-silences-exporter
 
-go 1.12
+go 1.22
 
 require (
-	github.com/FXinnovation/alertmanager-maintenance-scheduler v0.0.0-20200204185754-205e77c66862 // indirect
-	github.com/OneOfOne/xxhash v1.2.5 // indirect
-	github.com/armon/go-metrics v0.0.0-20190430140413-ec5e00d3c878 // indirect
-	github.com/go-openapi/analysis v0.19.4 // indirect
 	github.com/go-openapi/strfmt v0.19.2
-	github.com/google/btree v1.0.0 // indirect
-	github.com/google/go-cmp v0.3.1 // indirect
 	github.com/gorilla/mux v1.7.3
-	github.com/hashicorp/go-cleanhttp v0.5.1 // indirect
-	github.com/hashicorp/go-immutable-radix v1.1.0 // indirect
-	github.com/hashicorp/go-msgpack v0.5.5 // indirect
-	github.com/hashicorp/go-uuid v1.0.1 // indirect
-	github.com/hashicorp/golang-lru v0.5.3 // indirect
-	github.com/mailru/easyjson v0.0.0-20190626092158-b2ccc519800e // indirect
-	github.com/miekg/dns v1.1.15 // indirect
-	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
-	github.com/modern-go/reflect2 v1.0.1 // indirect
-	github.com/mwitkow/go-conntrack v0.0.0-20190716064945-2f068394615f // indirect
 	github.com/prometheus/alertmanager v0.20.0
-	github.com/prometheus/client_golang v1.2.1
-	github.com/prometheus/common v0.7.0
-	github.com/spaolacci/murmur3 v1.1.0 // indirect
-	github.com/stretchr/testify v1.3.0
-	go.mongodb.org/mongo-driver v1.0.4 // indirect
-	golang.org/x/crypto v0.0.0-20190701094942-4def268fd1a4 // indirect
+	github.com/prometheus/client_golang v1.11.1
+	github.com/prometheus/common v0.26.0
+	github.com/stretchr/testify v1.8.2
 	gopkg.in/alecthomas/kingpin.v2 v2.2.6
-	gopkg.in/yaml.v2 v2.2.4
+	gopkg.in/yaml.v2 v2.4.0
+)
+
+require (
+	github.com/PuerkitoBio/purell v1.1.1 // indirect
+	github.com/PuerkitoBio/urlesc v0.0.0-20170810143723-de5bf2ad4578 // indirect
+	github.com/alecthomas/template v0.0.0-20190718012654-fb15b899a751 // indirect
+	github.com/alecthomas/units v0.0.0-20211218093645-b94a6e3cc137 // indirect
+	github.com/asaskevich/govalidator v0.0.0-20190424111038-f61b66f89f4a // indirect
+	github.com/beorn7/perks v1.0.1 // indirect
+	github.com/cespare/xxhash/v2 v2.2.0 // indirect
+	github.com/davecgh/go-spew v1.1.1 // indirect
+	github.com/go-openapi/analysis v0.19.4 // indirect
+	github.com/go-openapi/errors v0.19.2 // indirect
+	github.com/go-openapi/jsonpointer v0.19.2 // indirect
+	github.com/go-openapi/jsonreference v0.19.2 // indirect
+	github.com/go-openapi/loads v0.19.2 // indirect
+	github.com/go-openapi/runtime v0.19.4 // indirect
+	github.com/go-openapi/spec v0.19.2 // indirect
+	github.com/go-openapi/swag v0.19.5 // indirect
+	github.com/go-openapi/validate v0.19.2 // indirect
+	github.com/go-stack/stack v1.8.0 // indirect
+	github.com/golang/protobuf v1.5.3 // indirect
+	github.com/konsorten/go-windows-terminal-sequences v1.0.3 // indirect
+	github.com/mailru/easyjson v0.0.0-20190626092158-b2ccc519800e // indirect
+	github.com/matttproud/golang_protobuf_extensions v1.0.4 // indirect
+	github.com/mitchellh/mapstructure v1.1.2 // indirect
+	github.com/pmezard/go-difflib v1.0.0 // indirect
+	github.com/prometheus/client_model v0.3.0 // indirect
+	github.com/prometheus/procfs v0.10.1 // indirect
+	github.com/sirupsen/logrus v1.6.0 // indirect
+	github.com/stretchr/objx v0.5.0 // indirect
+	go.mongodb.org/mongo-driver v1.0.4 // indirect
+	golang.org/x/net v0.7.0 // indirect
+	golang.org/x/sys v0.8.0 // indirect
+	golang.org/x/text v0.7.0 // indirect
+	google.golang.org/protobuf v1.26.0 // indirect
+	gopkg.in/yaml.v3 v3.0.1 // indirect
 )

@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"net/http"
 	"net/url"
 	"path"
@@ -22,17 +21,20 @@ type AlertmanagerAPI interface {
 
 // AlertmanagerClient is the concrete implementation of the client object for methods calling the Alertmanager API
 type AlertmanagerClient struct {
-	AlertManagerAPIURL string
+	URL      string
+	Username string
+	Password string
+	TenantID string
 }
 
 // NewAlertManagerClient creates a client to work with
-func NewAlertManagerClient(alertmanager string) *AlertmanagerClient {
-	u := alertmanager + "/" + apiVersion
-	return &AlertmanagerClient{AlertManagerAPIURL: u}
+func NewAlertManagerClient(baseURL, username, password, tenantID string) *AlertmanagerClient {
+	u := baseURL + "/" + apiVersion
+	return &AlertmanagerClient{URL: u, Username: username, Password: password, TenantID: tenantID}
 }
 
 func (ac *AlertmanagerClient) constructURL(pairs ...string) (string, error) {
-	u, err := url.Parse(ac.AlertManagerAPIURL)
+	u, err := url.Parse(ac.URL)
 	if err != nil {
 		return "", err
 	}
@@ -48,6 +50,16 @@ func (ac *AlertmanagerClient) doRequest(method, url string, requestBody io.Reade
 	if err != nil {
 		return nil, fmt.Errorf("unable to create HTTP request: %s", err.Error())
 	}
+
+	if ac.Username != "" && ac.Password != "" {
+		req.SetBasicAuth(ac.Username, ac.Password)
+	}
+
+	if ac.TenantID != "" {
+		req.Header.Set("X-Scope-OrgID", ac.TenantID)
+	}
+
+	req.Header.Set("User-Agent", "alertmanager-silences-exporter")
 	req.Header.Set("Accept", "application/json")
 	req.Header.Set("Content-Type", "application/json")
 
@@ -62,7 +74,7 @@ func (ac *AlertmanagerClient) doRequest(method, url string, requestBody io.Reade
 
 	defer resp.Body.Close()
 
-	body, err := ioutil.ReadAll(resp.Body)
+	body, err := io.ReadAll(resp.Body)
 	if err != nil {
 		return nil, fmt.Errorf("unable to read response body: %s", err.Error())
 	}

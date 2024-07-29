@@ -1,18 +1,11 @@
 package main
 
 import (
-	"regexp"
 	"time"
 
-	"github.com/prometheus/common/log"
-
 	"github.com/prometheus/alertmanager/api/v2/models"
-
 	"github.com/prometheus/client_golang/prometheus"
-)
-
-var (
-	invalidMetricChars = regexp.MustCompile("[^a-zA-Z0-9:_]")
+	"github.com/prometheus/common/log"
 )
 
 type Silence struct {
@@ -21,12 +14,16 @@ type Silence struct {
 	Status   string
 }
 
-func (s *Silence) Decorate() {
+func (s *Silence) Decorate(tenant string) {
 	s.Labels = map[string]string{}
 	s.Labels["id"] = *s.Gettable.ID
 	s.Labels["comment"] = *s.Gettable.Comment
 	s.Labels["createdBy"] = *s.Gettable.CreatedBy
 	s.Labels["status"] = *s.Gettable.Status.State
+
+	if tenant != "" {
+		s.Labels["tenant"] = tenant
+	}
 
 	for _, m := range s.Gettable.Matchers {
 		s.Labels["matcher_"+*m.Name] = *m.Value
@@ -53,22 +50,59 @@ func (c *AlertmanagerSilencesCollector) Describe(ch chan<- *prometheus.Desc) {
 
 // Collect metrics from Alertmanager
 func (c *AlertmanagerSilencesCollector) Collect(ch chan<- prometheus.Metric) {
-	silences, err := c.AlertmanagerClient.ListSilences()
-	if err != nil {
-		log.Errorf("unable to list silences: %s", err.Error())
-		ch <- prometheus.NewInvalidMetric(amErrorDesc, err)
-		return
-	}
+	if len(c.Config.Tenants) == 0 {
+		silences, err := c.AlertmanagerClient.ListSilences()
+		if err != nil {
+			log.Errorf("unable to list silences: %s", err.Error())
+			ch <- prometheus.NewInvalidMetric(amErrorDesc, err)
+			return
+		}
 
-	for _, s := range silences {
-		silence := &Silence{Gettable: s}
+		for _, s := range silences {
+			silence := &Silence{Gettable: s}
+			silence.Decorate("")
 
-		silence.Decorate()
-		c.extractMetric(ch, silence)
+			if !c.Config.ExpiredSilences {
+				if silence.Status != "active" {
+					continue
+				}
+			}
+
+			c.extractMetric(ch, silence, "")
+		}
+	} else {
+		for _, tenant := range c.Config.Tenants {
+
+			client := NewAlertManagerClient(
+				c.Config.AlertmanagerURL,
+				c.Config.AlertmanagerUsername,
+				c.Config.AlertmanagerPassword,
+				tenant,
+			)
+			silences, err := client.ListSilences()
+			if err != nil {
+				log.Errorf("unable to list silences: %s", err.Error())
+				ch <- prometheus.NewInvalidMetric(amErrorDesc, err)
+				return
+			}
+
+			for _, s := range silences {
+				silence := &Silence{Gettable: s}
+				silence.Decorate(tenant)
+
+				if !c.Config.ExpiredSilences {
+					if silence.Status != "active" {
+						continue
+					}
+				}
+
+				c.extractMetric(ch, silence, tenant)
+			}
+		}
 	}
 }
 
-func (c *AlertmanagerSilencesCollector) extractMetric(ch chan<- prometheus.Metric, silence *Silence) {
+func (c *AlertmanagerSilencesCollector) extractMetric(ch chan<- prometheus.Metric, silence *Silence, tenant string) {
 	startTime, err := time.Parse(time.RFC3339, silence.Gettable.StartsAt.String())
 	if err != nil {
 		log.Errorf("cannot parse start time of silence with ID '%s'\n", silence.Labels["id"])
@@ -92,14 +126,18 @@ func (c *AlertmanagerSilencesCollector) extractMetric(ch chan<- prometheus.Metri
 		float64(state),
 	)
 
+	labels := map[string]string{"id": silence.Labels["id"]}
+	if tenant != "" {
+		labels["tenant"] = tenant
+	}
 	ch <- prometheus.MustNewConstMetric(
-		prometheus.NewDesc("alertmanager_silence_start_seconds", "Alertmanager silence start time, elapsed seconds since epoch", nil, map[string]string{"id": silence.Labels["id"]}),
+		prometheus.NewDesc("alertmanager_silence_start_seconds", "Alertmanager silence start time, elapsed seconds since epoch", nil, labels),
 		prometheus.GaugeValue,
 		float64(startTime.Unix()),
 	)
 
 	ch <- prometheus.MustNewConstMetric(
-		prometheus.NewDesc("alertmanager_silence_end_seconds", "Alertmanager silence end time, elapsed seconds since epoch", nil, map[string]string{"id": silence.Labels["id"]}),
+		prometheus.NewDesc("alertmanager_silence_end_seconds", "Alertmanager silence end time, elapsed seconds since epoch", nil, labels),
 		prometheus.GaugeValue,
 		float64(endTime.Unix()),
 	)

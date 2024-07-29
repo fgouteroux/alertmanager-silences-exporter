@@ -1,7 +1,6 @@
 package main
 
 import (
-	"io/ioutil"
 	"log"
 	"os"
 
@@ -10,13 +9,17 @@ import (
 
 // Config the configuration of the application
 type Config struct {
-	AlertmanagerURL string `yaml:"alertmanager_url"`
+	AlertmanagerURL      string   `yaml:"alertmanager_url"`
+	AlertmanagerUsername string   `yaml:"alertmanager_username"`
+	AlertmanagerPassword string   `yaml:"alertmanager_password"`
+	ExpiredSilences      bool     `yaml:"expired_silences,omitempty"`
+	Tenants              []string `yaml:"tenants,omitempty"`
 }
 
 func loadConfig(path string) (*Config, error) {
 	conf := &Config{}
 	if path != "" {
-		f, err := ioutil.ReadFile(path)
+		f, err := os.ReadFile(path)
 		if err != nil {
 			return nil, err
 		}
@@ -29,6 +32,16 @@ func loadConfig(path string) (*Config, error) {
 	envURL := os.Getenv("ALERTMANAGER_URL")
 	if envURL != "" {
 		conf.AlertmanagerURL = envURL
+	}
+
+	envUsername := os.Getenv("ALERTMANAGER_USERNAME")
+	if envUsername != "" {
+		conf.AlertmanagerUsername = envUsername
+	}
+
+	envPassword := os.Getenv("ALERTMANAGER_PASSWORD")
+	if envPassword != "" {
+		conf.AlertmanagerPassword = envPassword
 	}
 
 	log.Printf("Config loaded, path: %s", path)
