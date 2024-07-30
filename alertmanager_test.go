@@ -53,7 +53,7 @@ func TestAlertmanagerClient_listSilences(t *testing.T) {
   "startsAt": "2020-02-20T22:12:33.533Z"
 }]
 `
-	resourcesHandler := func(w http.ResponseWriter, r *http.Request) {
+	resourcesHandler := func(w http.ResponseWriter, _ *http.Request) {
 		_, _ = w.Write([]byte(silence))
 	}
 	// create test server with handler

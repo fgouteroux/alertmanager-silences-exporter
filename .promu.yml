@@ -1,9 +1,12 @@
+go:
+  version: 1.22
 repository:
   path: github.com/fgouteroux/alertmanager-silences-exporter
 build:
   binaries:
     - name: alertmanager-silences-exporter
-  flags: -a -tags 'netgo static_build'
+  tags:
+      all: [netgo, static_build]
   ldflags: |
     -X github.com/prometheus/common/version.Version={{.Version}}
     -X github.com/prometheus/common/version.Revision={{.Revision}}
@@ -16,10 +19,4 @@ tarball:
     - README.md
 crossbuild:
   platforms:
-    - linux/amd64
-    - linux/386
-    - linux/arm
-    - linux/arm64
-    - darwin/amd64
-    - darwin/386
-
+    - linux

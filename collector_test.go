@@ -28,7 +28,7 @@ func TestNewAlertmanagerSilencesCollector_Conf_OK(t *testing.T) {
 		t.Error(err)
 	}
 
-	asc := NewAlertmanagerSilencesCollector(conf, &AlertmanagerClient{})
+	asc := NewAlertmanagerSilencesCollector(conf, &AlertmanagerClient{}, nil)
 	got := asc.Config.AlertmanagerURL
 	want := "http://localhost:9093/"
 
@@ -134,7 +134,7 @@ func TestCollector_Collect_OK(t *testing.T) {
 
 	mac.On("ListSilences", mock.Anything).Return(silenceList, nil)
 
-	asc := NewAlertmanagerSilencesCollector(conf, mac)
+	asc := NewAlertmanagerSilencesCollector(conf, mac, nil)
 
 	rr := CallExporter(asc)
 

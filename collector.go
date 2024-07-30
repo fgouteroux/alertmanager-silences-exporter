@@ -3,9 +3,11 @@ package main
 import (
 	"time"
 
+	"github.com/go-kit/log"
+	"github.com/go-kit/log/level"
+
 	"github.com/prometheus/alertmanager/api/v2/models"
 	"github.com/prometheus/client_golang/prometheus"
-	"github.com/prometheus/common/log"
 )
 
 type Silence struct {
@@ -35,12 +37,13 @@ func (s *Silence) Decorate(tenant string) {
 // AlertmanagerSilencesCollector collects Alertmanager Silence metrics
 type AlertmanagerSilencesCollector struct {
 	Config             *Config
+	Logger             log.Logger
 	AlertmanagerClient AlertmanagerAPI
 }
 
 // NewAlertmanagerSilencesCollector returns the collector
-func NewAlertmanagerSilencesCollector(conf *Config, client AlertmanagerAPI) *AlertmanagerSilencesCollector {
-	return &AlertmanagerSilencesCollector{Config: conf, AlertmanagerClient: client}
+func NewAlertmanagerSilencesCollector(conf *Config, client AlertmanagerAPI, logger log.Logger) *AlertmanagerSilencesCollector {
+	return &AlertmanagerSilencesCollector{Config: conf, AlertmanagerClient: client, Logger: logger}
 }
 
 // Describe to satisfy the collector interface.
@@ -50,10 +53,11 @@ func (c *AlertmanagerSilencesCollector) Describe(ch chan<- *prometheus.Desc) {
 
 // Collect metrics from Alertmanager
 func (c *AlertmanagerSilencesCollector) Collect(ch chan<- prometheus.Metric) {
+	amErrorDesc := prometheus.NewDesc("alertmanager_error", "Error collecting metrics", nil, nil)
 	if len(c.Config.Tenants) == 0 {
 		silences, err := c.AlertmanagerClient.ListSilences()
 		if err != nil {
-			log.Errorf("unable to list silences: %s", err.Error())
+			level.Error(c.Logger).Log("msg", "unable to list silences", "err", err.Error()) // #nosec G104
 			ch <- prometheus.NewInvalidMetric(amErrorDesc, err)
 			return
 		}
@@ -81,7 +85,7 @@ func (c *AlertmanagerSilencesCollector) Collect(ch chan<- prometheus.Metric) {
 			)
 			silences, err := client.ListSilences()
 			if err != nil {
-				log.Errorf("unable to list silences: %s", err.Error())
+				level.Error(c.Logger).Log("msg", "unable to list silences", "err", err.Error()) // #nosec G104
 				ch <- prometheus.NewInvalidMetric(amErrorDesc, err)
 				return
 			}
@@ -105,13 +109,13 @@ func (c *AlertmanagerSilencesCollector) Collect(ch chan<- prometheus.Metric) {
 func (c *AlertmanagerSilencesCollector) extractMetric(ch chan<- prometheus.Metric, silence *Silence, tenant string) {
 	startTime, err := time.Parse(time.RFC3339, silence.Gettable.StartsAt.String())
 	if err != nil {
-		log.Errorf("cannot parse start time of silence with ID '%s'\n", silence.Labels["id"])
+		level.Error(c.Logger).Log("msg", "cannot parse start time of silence", "ID", silence.Labels["id"]) // #nosec G104
 		return
 	}
 
 	endTime, err := time.Parse(time.RFC3339, silence.Gettable.EndsAt.String())
 	if err != nil {
-		log.Errorf("cannot parse end time of silence with ID '%s'\n", silence.Labels["id"])
+		level.Error(c.Logger).Log("msg", "cannot parse end time of silence", "ID", silence.Labels["id"]) // #nosec G104
 		return
 	}
 

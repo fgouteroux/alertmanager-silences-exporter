@@ -3,6 +3,7 @@ package main
 import (
 	"log"
 	"os"
+	"path/filepath"
 
 	"gopkg.in/yaml.v2"
 )
@@ -19,7 +20,7 @@ type Config struct {
 func loadConfig(path string) (*Config, error) {
 	conf := &Config{}
 	if path != "" {
-		f, err := os.ReadFile(path)
+		f, err := os.ReadFile(filepath.Clean(path))
 		if err != nil {
 			return nil, err
 		}
